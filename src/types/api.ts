@@ -1,6 +1,5 @@
 // src/types/api.ts
-// Contrato EXATO com o backend C#. Nada aqui pode ser inventado sem
-// combinar com o swagger.
+// Contrato EXATO com o backend C#.
 
 // ============================================================
 // AUTH
@@ -43,7 +42,7 @@ export interface MensagemResponse {
 }
 
 // ============================================================
-// TAREFAS — enum vai como STRING (backend usa JsonStringEnumConverter)
+// TAREFAS (legado — Kanban)
 // ============================================================
 
 export type PrioridadeApi = 'baixa' | 'media' | 'alta';
@@ -54,9 +53,9 @@ export interface CriarTarefaRequest {
   descricao: string | null;
   prioridade: PrioridadeApi;
   status: StatusColunaApi;
-  prazo: string | null;              // YYYY-MM-DD (DateOnly?)
+  prazo: string | null;
   pomodorosPlanejados: number | null;
-  pomodoros: number;                 // só no criar (0)
+  pomodoros: number;
 }
 
 export interface AtualizarTarefaRequest {
@@ -66,7 +65,6 @@ export interface AtualizarTarefaRequest {
   status: StatusColunaApi;
   prazo: string | null;
   pomodorosPlanejados: number | null;
-  // pomodoros NÃO vai no PUT — pertence ao servidor
 }
 
 export interface MudarStatusRequest {
@@ -77,9 +75,9 @@ export interface TarefaResponse {
   id: string;
   titulo: string;
   descricao?: string | null;
-  prioridade: PrioridadeApi | number;   // aceita os dois
+  prioridade: PrioridadeApi | number;
   status: StatusColunaApi | number;
-  criadoEm: string;                     // ISO 8601
+  criadoEm: string;
   prazo?: string | null;
   pomodoros?: number | null;
   pomodorosPlanejados?: number | null;
@@ -105,8 +103,99 @@ export interface EventoPomodoroRequest {
   minutosPlanejados: number;
   minutosReais: number;
   segundosReais: number;
-  ocorridoEm: string;              // ISO 8601 com timezone
+  ocorridoEm: string;
   tarefaId: string | null;
   tarefaTitulo: string | null;
   statusTarefa: StatusColunaApi | null;
 }
+
+// ============================================================
+// INSUMOS
+// ============================================================
+
+export interface InsumoResponse {
+  id: string;
+  nome: string;
+  categoria: string;
+  unidade: string;
+  quantidadeAtual: number;
+  quantidadeMinima: number;
+  precoCompra: number;
+  precoVenda: number;
+  fornecedorId?: string | null;
+  observacoes?: string | null;
+  ativo: boolean;
+  criadoEm: string;
+}
+
+export interface CriarInsumoRequest {
+  nome: string;
+  categoria: string;
+  unidade: string;
+  quantidadeAtual: number;
+  quantidadeMinima: number;
+  precoCompra: number;
+  precoVenda: number;
+  fornecedorId?: string | null;
+  observacoes?: string | null;
+}
+
+export type AtualizarInsumoRequest = CriarInsumoRequest;
+
+// ============================================================
+// FORNECEDORES
+// ============================================================
+
+export interface FornecedorResponse {
+  id: string;
+  nome: string;
+  documento?: string | null;
+  telefone?: string | null;
+  email?: string | null;
+  observacoes?: string | null;
+  ativo: boolean;
+  criadoEm: string;
+}
+
+export interface CriarFornecedorRequest {
+  nome: string;
+  documento?: string | null;
+  telefone?: string | null;
+  email?: string | null;
+  observacoes?: string | null;
+}
+
+export type AtualizarFornecedorRequest = CriarFornecedorRequest;
+
+// ============================================================
+// MOVIMENTAÇÕES
+// ============================================================
+
+export type TipoMovimentacaoApi = 'Compra' | 'Venda' | 'Ajuste';
+
+export interface MovimentacaoResponse {
+  id: string;
+  insumoId: string;
+  tipo: TipoMovimentacaoApi;
+  quantidade: number;
+  precoUnitario: number;
+  total: number;
+  data: string;
+  fornecedorId?: string | null;
+  cliente?: string | null;
+  observacoes?: string | null;
+  criadoEm: string;
+}
+
+export interface CriarMovimentacaoRequest {
+  insumoId: string;
+  tipo: TipoMovimentacaoApi;
+  quantidade: number;
+  precoUnitario: number;
+  data: string;
+  fornecedorId?: string | null;
+  cliente?: string | null;
+  observacoes?: string | null;
+}
+
+export type AtualizarMovimentacaoRequest = CriarMovimentacaoRequest;

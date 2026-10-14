@@ -125,3 +125,32 @@ export function normalizarErro(
 export function mensagemDeErro(err: unknown, padrao?: string): string {
   return normalizarErro(err, padrao).message;
 }
+
+// ============================================================
+// Helpers para o banner de status da API
+// ============================================================
+
+/**
+ * Retorna `true` se o erro foi um 404 — geralmente significa que a rota
+ * ainda não foi implementada no backend (ex.: /api/insumos ainda não existe).
+ *
+ * Use junto com `Promise.allSettled` para detectar individualmente quais
+ * recursos já estão prontos na API.
+ */
+export function eRotaInexistente(err: unknown): boolean {
+  if (!isAxiosError(err)) return false;
+  return err.response?.status === 404;
+}
+
+/**
+ * Retorna `true` se o erro é de rede (servidor fora do ar, sem conexão,
+ * DNS não resolve, timeout, etc.) — não é um erro de negócio.
+ */
+export function eErroDeRede(err: unknown): boolean {
+  if (!isAxiosError(err)) return false;
+  // Sem resposta HTTP = problema de rede/servidor indisponível
+  if (!err.response) return true;
+  // 502, 503, 504 = servidor/gateway indisponível
+  const s = err.response.status;
+  return s === 502 || s === 503 || s === 504;
+}
