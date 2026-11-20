@@ -27,7 +27,7 @@ http.interceptors.request.use((config) => {
 });
 
 // ---------------- Interceptor: response ----------------
-const ROTAS_SEM_REDIRECT = ['/api/auth/login', '/api/auth/confirmar'];
+const ROTAS_SEM_REDIRECT = ['/api/auth/login', '/api/auth/confirmar', '/api/auth/me'];
 
 http.interceptors.response.use(
   (r) => r,
@@ -35,9 +35,11 @@ http.interceptors.response.use(
     const status = error?.response?.status;
     const url: string = error?.config?.url ?? '';
     const publica = ROTAS_SEM_REDIRECT.some((r) => url.includes(r));
-    const jaNoLogin = window.location.pathname.startsWith('/login');
+    const noDashboard = window.location.pathname === '/dashboard' || window.location.pathname.startsWith('/dashboard/');
+    const token = localStorage.getItem('token');
+    const tokenDaRequisicao = error?.config?.headers?.get?.('Authorization') ?? error?.config?.headers?.Authorization;
 
-    if (status === 401 && !publica && !jaNoLogin) {
+    if (status === 401 && !publica && noDashboard && token && tokenDaRequisicao === `Bearer ${token}`) {
       localStorage.removeItem('token');
       localStorage.removeItem('usuario');
       window.location.href = '/login';
