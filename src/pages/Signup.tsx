@@ -50,7 +50,7 @@ const STYLES = `
 .sg *, .sg *::before, .sg *::after { box-sizing: border-box; }
 .sg h1, .sg h2, .sg h3 { margin: 0; letter-spacing: -.02em; }
 .sg p { margin: 0; }
-.sg a { color: inherit; text-decoration: none; }
+.sg :where(a) { color: inherit; text-decoration: none; }
 .sg button, .sg input { font-family: inherit; }
 
 /* ---------- Skip link ---------- */
@@ -91,7 +91,7 @@ const STYLES = `
 .sg-brand {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg, var(--brand-3) 0%, var(--brand) 55%, #3b82f6 100%);
+  background: #0b1220;
   color: #fff;
   padding: 48px 56px;
   display: flex;
@@ -716,7 +716,7 @@ export default function Signup() {
           <aside className="sg-brand" aria-label="Sobre o Controle de Insumos">
             <div className="sg-brand-top">
               <Link to="/" className="sg-brand-logo" aria-label="Controle de Insumos — início">
-                <span className="sg-brand-logo-mark" aria-hidden="true">📦</span>
+                <img src="/logo.svg" alt="" className="h-11 w-11 rounded-xl" />
                 <span>Controle de Insumos</span>
               </Link>
 

@@ -39,7 +39,7 @@ const STYLES = `
 .st *, .st *::before, .st *::after { box-sizing: border-box; }
 .st h1, .st h2 { margin: 0; letter-spacing: -.025em; }
 .st p { margin: 0; }
-.st a { text-decoration: none; color: inherit; }
+.st :where(a) { text-decoration: none; color: inherit; }
 
 .st-skip {
   position: absolute; top: -100px; left: 12px; z-index: 9999;
@@ -70,10 +70,7 @@ const STYLES = `
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  background:
-    radial-gradient(900px 500px at 80% -10%, rgba(59,130,246,.10), transparent 60%),
-    radial-gradient(700px 400px at -10% 100%, rgba(37,99,235,.07), transparent 55%),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  background: radial-gradient(900px 500px at 80% -10%, rgba(37,99,235,.4), transparent 60%), #0b1220;
   position: relative;
   overflow: hidden;
 }
@@ -83,7 +80,7 @@ const STYLES = `
   top: 24px; left: 50%;
   transform: translateX(-50%);
   display: inline-flex; align-items: center; gap: 10px;
-  color: var(--brand); font-weight: 700; font-size: 17px;
+  color: #fff; font-weight: 700; font-size: 17px;
 }
 .st-brand-mark {
   width: 34px; height: 34px; border-radius: 10px;
@@ -335,7 +332,7 @@ export function StatusView({
 
         <div className="st-page">
           <Link to="/" className="st-brand" aria-label="Controle de Insumos — início">
-            <span className="st-brand-mark" aria-hidden="true">📦</span>
+            <img src="/logo.svg" alt="" className="h-9 w-9 rounded-xl" />
             <span>Controle de Insumos</span>
           </Link>
 

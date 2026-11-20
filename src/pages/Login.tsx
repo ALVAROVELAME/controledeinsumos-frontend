@@ -34,7 +34,7 @@ const STYLES = `
 .lg *, .lg *::before, .lg *::after { box-sizing: border-box; }
 .lg h1, .lg h2, .lg h3 { margin: 0; letter-spacing: -.02em; }
 .lg p { margin: 0; }
-.lg a { color: inherit; text-decoration: none; }
+.lg :where(a) { color: inherit; text-decoration: none; }
 .lg button { font-family: inherit; }
 
 /* ---------- Skip link ---------- */
@@ -74,7 +74,7 @@ const STYLES = `
 .lg-brand {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(145deg, var(--brand-3) 0%, var(--brand) 55%, #3b82f6 100%);
+  background: #0b1220;
   color: #fff;
   padding: 48px 56px;
   display: flex;
@@ -471,7 +471,7 @@ export default function Login() {
           <aside className="lg-brand" aria-label="Sobre o Controle de Insumos">
             <div className="lg-brand-top">
               <Link to="/" className="lg-brand-logo" aria-label="Controle de Insumos — início">
-                <span className="lg-brand-logo-mark" aria-hidden="true">📦</span>
+                <img src="/logo.svg" alt="" className="h-11 w-11 rounded-xl" />
                 <span>Controle de Insumos</span>
               </Link>
 

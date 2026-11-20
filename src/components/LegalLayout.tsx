@@ -47,10 +47,10 @@ const STYLES = `
   -moz-osx-font-smoothing: grayscale;
 }
 .legal *, .legal *::before, .legal *::after { box-sizing: border-box; }
-.legal h1, .legal h2, .legal h3 { margin: 0; letter-spacing: -.02em; color: var(--ink); }
+.legal :where(h1, h2, h3) { margin: 0; letter-spacing: -.02em; color: var(--ink); }
 .legal p { margin: 0 0 14px; }
 .legal p:last-child { margin-bottom: 0; }
-.legal a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; transition: color .15s; }
+.legal :where(a) { color: var(--brand-3); text-decoration: underline; text-underline-offset: 3px; transition: color .15s; }
 .legal a:hover { color: var(--brand-3); }
 .legal button { font-family: inherit; }
 .legal ul, .legal ol { margin: 0 0 14px; padding-left: 22px; }
@@ -99,7 +99,7 @@ const STYLES = `
   position: sticky;
   top: 0;
   z-index: 50;
-  background: rgba(255,255,255,.9);
+  background: #0b1220;
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid var(--line);
@@ -115,7 +115,7 @@ const STYLES = `
 }
 .legal-logo {
   display: inline-flex; align-items: center; gap: 10px;
-  color: var(--brand); font-weight: 700; font-size: 17px;
+  color: #fff; font-weight: 700; font-size: 17px;
   text-decoration: none !important;
 }
 .legal-logo-mark {
@@ -147,9 +147,7 @@ const STYLES = `
 /* ---------- Hero ---------- */
 .legal-hero {
   padding: 56px 24px 40px;
-  background:
-    radial-gradient(800px 400px at 80% -20%, rgba(59,130,246,.10), transparent 60%),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  background: radial-gradient(800px 400px at 80% -20%, rgba(37,99,235,.35), transparent 60%), #0b1220;
   border-bottom: 1px solid var(--line);
 }
 .legal-hero-inner {
@@ -180,6 +178,7 @@ const STYLES = `
   border-color: var(--line);
 }
 .legal-hero h1 {
+  color: #fff;
   font-size: clamp(30px, 4.4vw, 44px);
   font-weight: 800;
   line-height: 1.1;
@@ -189,7 +188,7 @@ const STYLES = `
 }
 .legal-hero-sub {
   font-size: 16.5px;
-  color: var(--ink-soft);
+  color: #e2e8f0;
   max-width: 720px;
   line-height: 1.65;
 }
@@ -578,11 +577,11 @@ export default function LegalLayout({
         {/* ---------- Header ---------- */}
         <header className="legal-header">
           <div className="legal-header-inner">
-            <Link to="/" className="legal-logo" aria-label="CtOperacional — início">
-              <span className="legal-logo-mark" aria-hidden="true">📋</span>
-              <span>CtOperacional</span>
+            <Link to="/" className="legal-logo" aria-label="Controle de Insumos — início">
+              <img src="/logo.svg" alt="" className="h-9 w-9 rounded-xl" />
+              <span>Controle de Insumos</span>
             </Link>
-            <Link to={voltarPara.rota} className="legal-back">
+            <Link to={voltarPara.rota} className="legal-back" aria-label={voltarPara.texto}>
               <span aria-hidden="true">←</span>
               <span className="legal-back-texto">{voltarPara.texto}</span>
             </Link>
@@ -661,7 +660,7 @@ export default function LegalLayout({
         <footer className="legal-footer">
           <div className="legal-footer-inner">
             <span>
-              © {new Date().getFullYear()} CtOperacional · Documento do tipo{' '}
+              © {new Date().getFullYear()} Controle de Insumos · Documento do tipo{' '}
               <strong style={{ color: '#fff', fontWeight: 700 }}>
                 {tipo === 'termos' ? 'Termos de Uso' : 'Política de Privacidade'}
               </strong>
