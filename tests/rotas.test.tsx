@@ -19,7 +19,14 @@ describe('proteção de rotas', () => {
     estado.carregando = true;
     render(<MemoryRouter><RotaProtegida>Conteúdo protegido</RotaProtegida></MemoryRouter>);
     expect(screen.getByRole('status')).toHaveTextContent('Carregando');
+    expect(screen.getByRole('status').querySelector('img')).toHaveAttribute('src', '/logo.svg');
     expect(screen.queryByText('Conteúdo protegido')).not.toBeInTheDocument();
+  });
+  it('exibe a mesma tela enquanto valida uma rota pública', () => {
+    estado.carregando = true;
+    render(<MemoryRouter><RotaPublica>Login</RotaPublica></MemoryRouter>);
+    expect(screen.getByRole('status')).toHaveTextContent('Controle de Insumos');
+    expect(screen.queryByText('Login')).not.toBeInTheDocument();
   });
   it('redireciona visitante ao login preservando a origem', async () => {
     render(<MemoryRouter initialEntries={['/dashboard']}><Routes><Route path="/dashboard" element={<RotaProtegida>Privado</RotaProtegida>} /><Route path="/login" element={<LoginDestino />} /></Routes></MemoryRouter>);

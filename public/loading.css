@@ -1,0 +1,22 @@
+/* Tela inicial e verificação de sessão compartilham o mesmo carregamento. */
+body { margin: 0; }
+.app-loading {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(ellipse at 50% 38%, #eff6ff 0%, #f8fafc 50%, #fff 100%);
+  color: #0f172a;
+  font-family: Inter, system-ui, sans-serif;
+  box-sizing: border-box;
+}
+.app-loading__content { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.app-loading__mark { position: relative; display: grid; place-items: center; width: 104px; height: 104px; }
+.app-loading__ring { position: absolute; inset: 0; border: 2px solid #dbeafe; border-top-color: #2563eb; border-right-color: #60a5fa; border-radius: 50%; animation: app-loading-spin 1s linear infinite; }
+.app-loading__logo { width: 64px; height: 64px; border-radius: 18px; box-shadow: 0 10px 24px rgba(37, 99, 235, .2); animation: app-loading-breathe 1.8s ease-in-out infinite; }
+.app-loading__title { margin: 22px 0 5px; font-size: 17px; font-weight: 750; letter-spacing: -.02em; }
+.app-loading__label { margin: 0; color: #64748b; font-size: 13px; }
+@keyframes app-loading-spin { to { transform: rotate(360deg); } }
+@keyframes app-loading-breathe { 50% { transform: scale(1.04); } }
+@media (prefers-reduced-motion: reduce) { .app-loading__ring, .app-loading__logo { animation: none; } }

@@ -13,6 +13,8 @@
     <meta name="robots" content="index, follow" />
     <link rel="canonical" href="https://ctinsumos.vercel.app/" />
 
+    <link rel="stylesheet" href="/loading.css" />
+
     <!-- Aparência do navegador -->
     <meta name="theme-color" content="#0b1220" />
     <meta name="color-scheme" content="light" />
@@ -75,7 +77,7 @@
   </head>
   <body>
     <noscript>Este site precisa de JavaScript para funcionar. Ative-o no seu navegador.</noscript>
-    <div id="root"></div>
+    <div id="root"><div class="app-loading" role="status" aria-live="polite"><div class="app-loading__content"><div class="app-loading__mark" aria-hidden="true"><span class="app-loading__ring"></span><img class="app-loading__logo" src="/logo.svg" alt="" width="64" height="64" /></div><p class="app-loading__title">Controle de Insumos</p><p class="app-loading__label">Carregando…</p></div></div></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
