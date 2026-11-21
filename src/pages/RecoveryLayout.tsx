@@ -1,6 +1,0 @@
-import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
-import './recovery.css';
-export default function RecoveryLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
- return <main className="recovery"><aside className="recovery-brand"><Link to="/" className="recovery-logo"><span>✦</span> Controle de Insumos</Link><div><span className="recovery-badge">● &nbsp; ACESSO SEGURO</span><h1>Seu controle começa com <em>tranquilidade.</em></h1><p>Recupere seu acesso e continue cuidando do que importa para o seu negócio.</p><ul><li>✓ &nbsp; Seus dados protegidos</li><li>✓ &nbsp; Recuperação simples e segura</li><li>✓ &nbsp; Tudo pronto para continuar</li></ul></div><small>Controle de Insumos · Gestão mais simples</small></aside><section className="recovery-side"><div className="recovery-card"><Link className="recovery-back" to="/login">← Voltar ao login</Link><h2>{title}</h2><p className="recovery-sub">{subtitle}</p>{children}</div></section></main>;
-}

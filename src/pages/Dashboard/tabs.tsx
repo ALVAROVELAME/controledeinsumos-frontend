@@ -1,20 +1,17 @@
 // src/pages/Dashboard/tabs.tsx
-import type { ReactNode } from 'react';
-import LogoutButton from '../../components/LogoutButton';
+import LogoutButton from '../../components/auth/LogoutButton';
 import type { Fornecedor, Insumo, Movimentacao, TipoMov } from '../../types/domain';
 import type {
-  Aba,
+  Tema,
+  EstadoApi,
   CampoInsumo,
   CampoMov,
-  EstadoApi,
   Ordem,
   PontoMes,
   StatusInsumo,
-  Tema,
   Totais,
 } from './shared';
 import {
-  ABAS,
   GraficoBarras,
   GraficoLinha,
   IconEdit,
@@ -24,7 +21,6 @@ import {
   ThOrdenavel,
   TipoBadge,
   formatarData,
-  formatarDataLonga,
   formatarMoeda,
   formatarNumero,
   formatarQtd,
@@ -33,200 +29,6 @@ import {
   sugerirReposicao,
   textoVariacao,
 } from './shared';
-
-/* ============================================================
-   SIDEBAR
-   ============================================================ */
-
-export function DashboardSidebar({
-  abaAtual,
-  alertas,
-  totalInsumos,
-  tema,
-  onNavegar,
-  onAlternarTema,
-  atalhosDica,
-}: {
-  abaAtual: Aba;
-  alertas: number;
-  totalInsumos: number;
-  tema: Tema;
-  onNavegar: (id: Aba) => void;
-  onAlternarTema: () => void;
-  atalhosDica: ReactNode;
-}) {
-  return (
-    <aside className="dash-sidebar" aria-label="Navegação principal">
-      <div className="dash-brand">
-        <span className="dash-brand-mark" aria-hidden="true">📦</span>
-        <div className="dash-brand-text">
-          <span className="dash-brand-name">Controle de Insumos</span>
-          <span className="dash-brand-sub">Compras · Vendas · Lucro</span>
-        </div>
-      </div>
-
-      <nav className="dash-nav" aria-label="Seções">
-        {ABAS.map((a) => (
-          <button
-            key={a.id}
-            type="button"
-            className={`dash-nav-btn${abaAtual === a.id ? ' is-active' : ''}`}
-            onClick={() => onNavegar(a.id)}
-            aria-current={abaAtual === a.id ? 'page' : undefined}
-          >
-            <span className="dash-nav-icon" aria-hidden="true">{a.icon}</span>
-            <span>{a.label}</span>
-            {a.id === 'insumos' && totalInsumos > 0 && (
-              alertas > 0 ? (
-                <span className="dash-nav-badge is-alert">
-                  <span aria-hidden="true">⚠ {alertas}</span>
-                  <span className="sr-only">{alertas} para repor</span>
-                </span>
-              ) : (
-                <span className="dash-nav-badge">
-                  {totalInsumos}
-                  <span className="sr-only"> cadastrados</span>
-                </span>
-              )
-            )}
-          </button>
-        ))}
-      </nav>
-
-      <div className="dash-sidebar-footer">
-        <button type="button" className="dash-nav-btn" onClick={onAlternarTema}>
-          <span className="dash-nav-icon" aria-hidden="true">{tema === 'claro' ? '🌙' : '☀️'}</span>
-          <span>{tema === 'claro' ? 'Modo escuro' : 'Modo claro'}</span>
-        </button>
-        {atalhosDica}
-      </div>
-    </aside>
-  );
-}
-
-/* ============================================================
-   HEADER (TOPBAR)
-   ============================================================ */
-
-function iniciais(nome?: string) {
-  if (!nome) return '?';
-  return nome.trim().split(/\s+/).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? '').join('');
-}
-
-export function DashboardHeader({
-  titulo,
-  usuario,
-  tema,
-  estado,
-  sincronizando,
-  menuAberto,
-  onAbrirDrawer,
-  onRecarregar,
-  onAlternarTema,
-  onAbrirPaleta,
-  onToggleMenu,
-  onIrParaConfig,
-  userBtnRef,
-}: {
-  titulo: string;
-  usuario: { nome?: string; email?: string } | null;
-  tema: Tema;
-  estado: EstadoApi;
-  sincronizando: boolean;
-  menuAberto: boolean;
-  onAbrirDrawer: () => void;
-  onRecarregar: () => void;
-  onAlternarTema: () => void;
-  onAbrirPaleta: () => void;
-  onToggleMenu: () => void;
-  onIrParaConfig: () => void;
-  userBtnRef: React.RefObject<HTMLButtonElement | null>;
-}) {
-  const ehMac = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/i.test(navigator.platform || navigator.userAgent);
-  const atalhoK = ehMac ? '⌘ K' : 'Ctrl K';
-
-  return (
-    <header className="dash-topbar">
-      <div className="dash-topbar-left">
-        <button type="button" className="dash-burger" onClick={onAbrirDrawer} aria-label="Abrir menu">
-          <span aria-hidden="true">☰</span>
-        </button>
-        <div style={{ minWidth: 0 }}>
-          <h1 className="dash-title">{titulo}</h1>
-          <p className="dash-subtitle">
-            {formatarDataLonga()}
-            {sincronizando && <> · sincronizando…</>}
-          </p>
-        </div>
-      </div>
-
-      <div className="dash-topbar-right">
-        {estado === 'offline' && (
-          <button
-            type="button"
-            className="dash-btn dash-btn-ghost dash-btn-sm"
-            onClick={onRecarregar}
-            title="Sem conexão — clique para tentar de novo"
-          >
-            ⚠ Offline · Recarregar
-          </button>
-        )}
-
-        <button
-          type="button"
-          className="dash-cmdk"
-          onClick={onAbrirPaleta}
-          aria-label="Buscar ou executar um comando"
-          aria-keyshortcuts="Control+K Meta+K"
-        >
-          <span aria-hidden="true">🔍</span>
-          <span className="dash-cmdk-text">Buscar ou executar…</span>
-          <kbd className="dash-kbd" aria-hidden="true">{atalhoK}</kbd>
-        </button>
-
-        <button
-          type="button"
-          className="dash-icon-btn"
-          onClick={onAlternarTema}
-          aria-label={tema === 'claro' ? 'Ativar modo escuro' : 'Ativar modo claro'}
-        >
-          <span aria-hidden="true">{tema === 'claro' ? '🌙' : '☀️'}</span>
-        </button>
-
-        <div className="dash-user" onClick={(e) => e.stopPropagation()}>
-          <button
-            ref={userBtnRef}
-            type="button"
-            className="dash-user-btn"
-            onClick={onToggleMenu}
-            aria-expanded={menuAberto}
-            aria-controls="menu-usuario"
-            aria-label="Conta do usuário"
-          >
-            <span className="dash-avatar" aria-hidden="true">{iniciais(usuario?.nome)}</span>
-            <span className="dash-user-name">{usuario?.nome ?? 'Usuário'}</span>
-            <span className="chevron" aria-hidden="true" style={{ fontSize: 10, color: 'var(--muted)' }}>▾</span>
-          </button>
-
-          {menuAberto && (
-            <div id="menu-usuario" role="group" aria-label="Conta" className="dash-menu">
-              <div className="dash-menu-header">
-                <div className="dash-menu-name">{usuario?.nome ?? 'Usuário'}</div>
-                <div className="dash-menu-email">{usuario?.email ?? ''}</div>
-              </div>
-              <button type="button" className="dash-menu-item" onClick={onIrParaConfig}>
-                <span aria-hidden="true">⚙️</span> Configurações
-              </button>
-              <div style={{ padding: 4 }}>
-                <LogoutButton estilo={{ width: '100%', padding: '9px 12px', textAlign: 'left', display: 'flex', alignItems: 'center', gap: 10, fontSize: 13, borderRadius: 8 }} />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-    </header>
-  );
-}
 
 /* ============================================================
    ABA: DASHBOARD
@@ -279,12 +81,12 @@ export function AbaDashboard({
       {!onboardingCompleto && (
         <section className="dash-panel" aria-labelledby="onboarding-title">
           <div className="dash-panel-head">
-            <h2 className="dash-panel-title" id="onboarding-title">
+            <h2 className="dash-panel-title text-[14.5px] font-bold" id="onboarding-title">
               {insumos.length === 0 && movimentacoes.length === 0
                 ? 'Bem-vindo! Comece por aqui'
                 : 'Falta pouco para ver seu lucro'}
             </h2>
-            <span className="dash-panel-meta">
+            <span className="dash-panel-meta text-[12.5px] text-[color:var(--muted)]">
               {passos.filter((p) => p.feito).length} de {passos.length} passos
             </span>
           </div>
@@ -292,12 +94,12 @@ export function AbaDashboard({
             {passos.map((p, i) => (
               <li key={p.titulo} className={`dash-step${p.feito ? ' is-done' : ''}`}>
                 <span className="dash-step-mark" aria-hidden="true">{p.feito ? '✓' : i + 1}</span>
-                <div className="dash-step-text">
-                  <div className="dash-step-title">
+                <div className="dash-step-text min-w-0 flex-[1_1_220px]">
+                  <div className="dash-step-title text-[14px] font-bold">
                     {p.titulo}
                     {p.feito && <span className="sr-only"> (concluído)</span>}
                   </div>
-                  <div className="dash-step-desc">{p.desc}</div>
+                  <div className="dash-step-desc text-[12.5px] text-[color:var(--muted)]">{p.desc}</div>
                 </div>
                 {!p.feito && (
                   <button
@@ -328,7 +130,7 @@ export function AbaDashboard({
           {atencao.length > 0 && (
             <section className="dash-panel" aria-labelledby="atencao-title">
               <div className="dash-panel-head">
-                <h2 className="dash-panel-title" id="atencao-title">Precisa de reposição</h2>
+                <h2 className="dash-panel-title text-[14.5px] font-bold" id="atencao-title">Precisa de reposição</h2>
                 <button type="button" className="dash-btn dash-btn-ghost dash-btn-sm" onClick={onVerUrgentes}>
                   Ver {alertas} na lista
                 </button>
@@ -338,14 +140,14 @@ export function AbaDashboard({
                   const sugestao = sugerirReposicao(i);
                   return (
                     <li key={i.id} className="dash-attention-item">
-                      <div className="dash-attention-main">
-                        <span className="dash-attention-name">{i.nome}</span>
+                      <div className="dash-attention-main flex min-w-0 flex-[1_1_200px] flex-col">
+                        <span className="dash-attention-name text-[14px] font-bold">{i.nome}</span>
                         <span className="cell-muted">
                           {formatarQtd(i.quantidadeAtual)} de {formatarQtd(i.quantidadeMinima)} {i.unidade} (mínimo)
                         </span>
                       </div>
                       <StatusBadge status={s} />
-                      <span className="dash-attention-tip">
+                      <span className="dash-attention-tip flex-[1_1_220px] text-[12.5px] text-[color:var(--ink-soft)]">
                         Sugestão: comprar {formatarQtd(sugestao)} {i.unidade}
                         {i.precoCompra > 0 && <> (≈ {formatarMoeda(sugestao * i.precoCompra)})</>}
                       </span>
@@ -362,16 +164,16 @@ export function AbaDashboard({
           <section className="chart-section">
             <div className="dash-panel" aria-labelledby="chart-barras-title">
               <div className="dash-panel-head">
-                <h2 className="dash-panel-title" id="chart-barras-title">Compras vs Vendas</h2>
-                <span className="dash-panel-meta">Últimos 6 meses</span>
+                <h2 className="dash-panel-title text-[14.5px] font-bold" id="chart-barras-title">Compras vs Vendas</h2>
+                <span className="dash-panel-meta text-[12.5px] text-[color:var(--muted)]">Últimos 6 meses</span>
               </div>
               <GraficoBarras serie={serie} />
             </div>
 
             <div className="dash-panel" aria-labelledby="chart-linha-title">
               <div className="dash-panel-head">
-                <h2 className="dash-panel-title" id="chart-linha-title">Evolução do lucro</h2>
-                <span className="dash-panel-meta">Últimos 6 meses</span>
+                <h2 className="dash-panel-title text-[14.5px] font-bold" id="chart-linha-title">Evolução do lucro</h2>
+                <span className="dash-panel-meta text-[12.5px] text-[color:var(--muted)]">Últimos 6 meses</span>
               </div>
               <GraficoLinha serie={serie} />
             </div>
@@ -379,13 +181,13 @@ export function AbaDashboard({
 
           <section className="dash-panel" aria-labelledby="ultimas-movs">
             <div className="dash-panel-head">
-              <h2 className="dash-panel-title" id="ultimas-movs">Últimas movimentações</h2>
+              <h2 className="dash-panel-title text-[14.5px] font-bold" id="ultimas-movs">Últimas movimentações</h2>
               <button type="button" className="dash-btn dash-btn-ghost dash-btn-sm" onClick={onIrParaMovimentacoes}>
                 Ver todas
               </button>
             </div>
             {ultimasMovs.length === 0 ? (
-              <p className="dash-panel-meta">Nenhuma movimentação ainda.</p>
+              <p className="dash-panel-meta text-[12.5px] text-[color:var(--muted)]">Nenhuma movimentação ainda.</p>
             ) : (
               <div className="dash-table-wrap">
                 <table className="dash-table">
@@ -480,8 +282,8 @@ export function AbaInsumos({
         <KpiCard icon="📦" label="Total" value={insumos.length} onClick={() => setStatusFiltro('Todos')} ativo={statusFiltro === 'Todos'} />
       </section>
 
-      <div className="dash-toolbar">
-        <div className="dash-filters" role="search" aria-label="Filtrar insumos">
+      <div className="dash-toolbar flex flex-col gap-[10px]">
+        <div className="dash-filters flex flex-wrap items-center gap-2" role="search" aria-label="Filtrar insumos">
           <label className="sr-only" htmlFor="filtro-busca-insumo">Buscar insumos</label>
           <input
             id="filtro-busca-insumo"
@@ -513,8 +315,8 @@ export function AbaInsumos({
 
       <section className="dash-panel" aria-labelledby="lista-insumos">
         <div className="dash-panel-head">
-          <h2 className="dash-panel-title" id="lista-insumos">Todos os insumos</h2>
-          <span className="dash-panel-meta" role="status">{insumosFiltrados.length} de {insumos.length}</span>
+          <h2 className="dash-panel-title text-[14.5px] font-bold" id="lista-insumos">Todos os insumos</h2>
+          <span className="dash-panel-meta text-[12.5px] text-[color:var(--muted)]" role="status">{insumosFiltrados.length} de {insumos.length}</span>
         </div>
 
         {insumosFiltrados.length === 0 ? (
@@ -657,8 +459,8 @@ export function AbaMovimentacoes({
         <KpiCard icon="🎯" label="Margem" value={`${formatarNumero(totais.margem, 1)}%`} variante={totais.margem >= 0 ? 'default' : 'danger'} />
       </section>
 
-      <div className="dash-toolbar">
-        <div className="dash-filters" role="search" aria-label="Filtrar movimentações">
+      <div className="dash-toolbar flex flex-col gap-[10px]">
+        <div className="dash-filters flex flex-wrap items-center gap-2" role="search" aria-label="Filtrar movimentações">
           <label className="sr-only" htmlFor="filtro-tipo-mov">Filtrar por tipo</label>
           <select id="filtro-tipo-mov" className="dash-select" value={tipoFiltro} onChange={(e) => setTipoFiltro(e.target.value as 'Todos' | TipoMov)}>
             <option value="Todos">Todos os tipos</option>
@@ -704,8 +506,8 @@ export function AbaMovimentacoes({
 
       <section className="dash-panel" aria-labelledby="lista-movs">
         <div className="dash-panel-head">
-          <h2 className="dash-panel-title" id="lista-movs">Movimentações</h2>
-          <span className="dash-panel-meta" role="status">
+          <h2 className="dash-panel-title text-[14.5px] font-bold" id="lista-movs">Movimentações</h2>
+          <span className="dash-panel-meta text-[12.5px] text-[color:var(--muted)]" role="status">
             {movsFiltradas.length} registro{movsFiltradas.length === 1 ? '' : 's'}
           </span>
         </div>
@@ -796,8 +598,8 @@ export function AbaFornecedores({
 }) {
   return (
     <>
-      <div className="dash-toolbar">
-        <div className="dash-filters">
+      <div className="dash-toolbar flex flex-col gap-[10px]">
+        <div className="dash-filters flex flex-wrap items-center gap-2">
           <div className="dash-filters-spacer">
             <button type="button" className="dash-btn dash-btn-primary" onClick={onNovo}>
               <span aria-hidden="true">➕</span> Novo fornecedor
@@ -808,8 +610,8 @@ export function AbaFornecedores({
 
       <section className="dash-panel" aria-labelledby="lista-fornecedores">
         <div className="dash-panel-head">
-          <h2 className="dash-panel-title" id="lista-fornecedores">Fornecedores</h2>
-          <span className="dash-panel-meta">
+          <h2 className="dash-panel-title text-[14.5px] font-bold" id="lista-fornecedores">Fornecedores</h2>
+          <span className="dash-panel-meta text-[12.5px] text-[color:var(--muted)]">
             {fornecedores.length} cadastrado{fornecedores.length === 1 ? '' : 's'}
           </span>
         </div>
@@ -897,12 +699,12 @@ export function AbaConfig({
     <>
       <section className="dash-panel" aria-labelledby="cfg-pref">
         <div className="dash-panel-head">
-          <h2 className="dash-panel-title" id="cfg-pref">Preferências</h2>
+          <h2 className="dash-panel-title text-[14.5px] font-bold" id="cfg-pref">Preferências</h2>
         </div>
         <div className="dash-config-row">
           <div>
-            <div className="dash-config-label">Tema</div>
-            <div className="dash-config-desc">Claro ou escuro</div>
+            <div className="dash-config-label text-[14px] font-semibold">Tema</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">Claro ou escuro</div>
           </div>
           <button type="button" className="dash-btn dash-btn-ghost" onClick={onAlternarTema}>
             {tema === 'claro' ? '🌙 Ativar escuro' : '☀️ Ativar claro'}
@@ -910,8 +712,8 @@ export function AbaConfig({
         </div>
         <div className="dash-config-row">
           <div>
-            <div className="dash-config-label">Conta</div>
-            <div className="dash-config-desc">{usuario?.email ?? 'Sessão ativa'}</div>
+            <div className="dash-config-label text-[14px] font-semibold">Conta</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">{usuario?.email ?? 'Sessão ativa'}</div>
           </div>
           <LogoutButton />
         </div>
@@ -919,12 +721,12 @@ export function AbaConfig({
 
       <section className="dash-panel" aria-labelledby="cfg-dados">
         <div className="dash-panel-head">
-          <h2 className="dash-panel-title" id="cfg-dados">Seus dados</h2>
+          <h2 className="dash-panel-title text-[14.5px] font-bold" id="cfg-dados">Seus dados</h2>
         </div>
         <div className="dash-config-row">
           <div>
-            <div className="dash-config-label">Sincronização</div>
-            <div className="dash-config-desc">
+            <div className="dash-config-label text-[14px] font-semibold">Sincronização</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">
               {estado === 'offline'
                 ? 'Sem conexão com o servidor. Verifique a rede e recarregue.'
                 : estado === 'sem-rotas'
@@ -943,15 +745,15 @@ export function AbaConfig({
         </div>
         <div className="dash-config-row">
           <div>
-            <div className="dash-config-label">Backup</div>
-            <div className="dash-config-desc">Baixe um JSON com todos os seus dados. Guarde em local seguro.</div>
+            <div className="dash-config-label text-[14px] font-semibold">Backup</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">Baixe um JSON com todos os seus dados. Guarde em local seguro.</div>
           </div>
           <button type="button" className="dash-btn dash-btn-ghost" onClick={onBaixarBackup}>⬇️ Baixar backup</button>
         </div>
         <div className="dash-config-row">
           <div>
-            <div className="dash-config-label">Exportar CSV</div>
-            <div className="dash-config-desc">Todas as movimentações, prontas para abrir no Excel</div>
+            <div className="dash-config-label text-[14px] font-semibold">Exportar CSV</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">Todas as movimentações, prontas para abrir no Excel</div>
           </div>
           <button type="button" className="dash-btn dash-btn-ghost" onClick={onExportarCSV} disabled={!temMovimentacoes}>
             ⬇️ Exportar
@@ -959,8 +761,8 @@ export function AbaConfig({
         </div>
         <div className="dash-config-row">
           <div>
-            <div className="dash-config-label">Limpar meus dados</div>
-            <div className="dash-config-desc">Apaga todos os insumos, fornecedores e movimentações da sua conta na nuvem</div>
+            <div className="dash-config-label text-[14px] font-semibold">Limpar meus dados</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">Apaga todos os insumos, fornecedores e movimentações da sua conta na nuvem</div>
           </div>
           <button type="button" className="dash-btn dash-btn-danger" onClick={onLimparTudo}>Limpar tudo</button>
         </div>
@@ -973,8 +775,8 @@ export function AbaConfig({
         <p className="dash-danger-desc">Ações irreversíveis.</p>
         <div className="dash-danger-row">
           <div>
-            <div className="dash-config-label">Excluir minha conta</div>
-            <div className="dash-config-desc">Apaga permanentemente a conta e os dados.</div>
+            <div className="dash-config-label text-[14px] font-semibold">Excluir minha conta</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">Apaga permanentemente a conta e os dados.</div>
           </div>
           <button type="button" className="dash-btn dash-btn-danger" onClick={onExcluirConta}>Excluir conta</button>
         </div>

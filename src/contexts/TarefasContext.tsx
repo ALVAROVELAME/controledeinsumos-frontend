@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
 import { useToast } from './ToastContext';
-import { tarefasService } from '../services/tarefas.service';
+import { tarefasService } from '../services/produtividade/tarefas.service';
 import { mensagemDeErro } from '../services/http';
 import { sanitizarTarefa } from '../mappers/tarefa.mapper';
 import type { StatusColuna, Tarefa } from '../types/domain';

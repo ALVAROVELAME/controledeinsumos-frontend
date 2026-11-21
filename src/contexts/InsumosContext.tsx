@@ -11,9 +11,9 @@ import type { ReactNode } from 'react';
 import { useAuth } from './AuthContext';
 import { useToast } from './ToastContext';
 import { mensagemDeErro } from '../services/http';
-import { insumosService, type InsumoInput } from '../services/insumos.service';
-import { fornecedoresService, type FornecedorInput } from '../services/fornecedores.service';
-import { movimentacoesService, type MovimentacaoInput } from '../services/movimentacoes.service';
+import { insumosService, type InsumoInput } from '../services/estoque/insumos.service';
+import { fornecedoresService, type FornecedorInput } from '../services/estoque/fornecedores.service';
+import { movimentacoesService, type MovimentacaoInput } from '../services/estoque/movimentacoes.service';
 import type { Insumo, Fornecedor, Movimentacao } from '../types/domain';
 
 export type EstadoSync = 'carregando' | 'pronto' | 'offline' | 'sem-rotas';

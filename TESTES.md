@@ -8,6 +8,14 @@ npm run test:watch       # reexecuta durante o desenvolvimento
 npm run test:coverage    # gera relatório em coverage/index.html
 ```
 
+## Organização
+
+- `tests/autenticacao/`: sessão, rotas e recuperação de senha.
+- `tests/painel/`: navegação e formulários do Dashboard.
+- `tests/paginas/`: páginas públicas e metadados.
+- `tests/unidade/`: conversões e regras isoladas.
+- `tests/setup.ts`: configuração compartilhada da suíte.
+
 ## Áreas prioritárias
 
 - Páginas públicas: navegação, FAQ, documentos legais e status.

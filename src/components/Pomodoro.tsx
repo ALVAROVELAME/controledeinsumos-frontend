@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
-import type { EventoPomodoroLocal, ModoPomodoro } from '../services/pomodoro.service';
+import type { EventoPomodoroLocal, ModoPomodoro } from '../services/produtividade/pomodoro.service';
 
 /* ------------------------------------------------------------------ *
  *  Pomodoro — arquivo independente
