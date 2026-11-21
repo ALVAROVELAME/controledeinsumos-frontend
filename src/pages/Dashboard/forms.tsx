@@ -17,7 +17,7 @@ export type InsumoModalProps = {
 };
 
 export function InsumoModal({ insumo, insumos, fornecedores, onFechar, onSalvar }: InsumoModalProps) {
-  const { fechar, marcarSujo } = useFecharComConfirmacao(onFechar);
+  const { fechar, marcarSujo, confirmacao } = useFecharComConfirmacao(onFechar);
   const [nome, setNome] = useState(insumo?.nome ?? '');
   const [categoria, setCategoria] = useState(insumo?.categoria ?? 'Matéria-prima');
   const [unidade, setUnidade] = useState(insumo?.unidade ?? 'un');
@@ -179,6 +179,7 @@ export function InsumoModal({ insumo, insumos, fornecedores, onFechar, onSalvar 
           </button>
         </div>
       </form>
+      {confirmacao}
     </Modal>
   );
 }
@@ -203,7 +204,7 @@ export function MovimentacaoModal({
   onSalvar,
 }: MovimentacaoModalProps) {
   const id = useId();
-  const { fechar, marcarSujo } = useFecharComConfirmacao(onFechar);
+  const { fechar, marcarSujo, confirmacao } = useFecharComConfirmacao(onFechar);
   const editando = !!movimentacao;
 
   const [tipo, setTipo] = useState<TipoMov>(movimentacao?.tipo ?? inicial?.tipo ?? 'Compra');
@@ -407,6 +408,7 @@ export function MovimentacaoModal({
           </button>
         </div>
       </form>
+      {confirmacao}
     </Modal>
   );
 }
@@ -418,7 +420,7 @@ export type FornecedorModalProps = {
 };
 
 export function FornecedorModal({ fornecedor, onFechar, onSalvar }: FornecedorModalProps) {
-  const { fechar, marcarSujo } = useFecharComConfirmacao(onFechar);
+  const { fechar, marcarSujo, confirmacao } = useFecharComConfirmacao(onFechar);
   const [nome, setNome] = useState(fornecedor?.nome ?? '');
   const [documento, setDocumento] = useState(fornecedor?.documento ?? '');
   const [telefone, setTelefone] = useState(fornecedor?.telefone ?? '');
@@ -494,6 +496,7 @@ export function FornecedorModal({ fornecedor, onFechar, onSalvar }: FornecedorMo
           </button>
         </div>
       </form>
+      {confirmacao}
     </Modal>
   );
 }

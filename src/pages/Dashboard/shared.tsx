@@ -1,3 +1,4 @@
+import ConfirmacaoModal from '../../components/ConfirmacaoModal';
 // src/pages/Dashboard/shared.tsx
 import {
   useState,
@@ -334,12 +335,16 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>, ativo: boolean)
 
 export function useFecharComConfirmacao(onFechar: () => void) {
   const [sujo, setSujo] = useState(false);
+  const [confirmacaoAberta, setConfirmacaoAberta] = useState(false);
   const fechar = useCallback(() => {
-    if (sujo && !window.confirm('Descartar as alterações que ainda não foram salvas?')) return;
-    onFechar();
+    if (sujo) setConfirmacaoAberta(true);
+    else onFechar();
   }, [sujo, onFechar]);
   const marcarSujo = useCallback(() => setSujo(true), []);
-  return { fechar, marcarSujo };
+  const confirmacao = confirmacaoAberta ? (
+    <ConfirmacaoModal titulo="Descartar alterações?" descricao="As alterações que ainda não foram salvas serão perdidas." textoConfirmar="Descartar" onConfirmar={onFechar} onCancelar={() => setConfirmacaoAberta(false)} />
+  ) : null;
+  return { fechar, marcarSujo, confirmacao };
 }
 
 /* ============================================================
