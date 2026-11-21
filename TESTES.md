@@ -17,4 +17,4 @@ npm run test:coverage    # gera relatório em coverage/index.html
 
 ## Cobertura ainda necessária
 
-Os testes atuais são uma base, não uma verificação exaustiva. Devem ser ampliados para incluir criação, edição e exclusão completas de insumos, fornecedores e movimentações, filtros, relatórios, exportação, acessibilidade, responsividade e falhas da API. Testes em navegador real e integração com uma API de teste também são necessários; jsdom não comprova aparência visual nem comportamento entre navegadores. Recuperação de senha ainda não está implementada no produto.
+Os testes atuais são uma base, não uma verificação exaustiva. Devem ser ampliados para incluir criação, edição e exclusão completas de insumos, fornecedores e movimentações, filtros, relatórios, exportação, acessibilidade, responsividade e falhas da API. Testes em navegador real e integração com uma API de teste também são necessários; jsdom não comprova aparência visual nem comportamento entre navegadores.

@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Status from './pages/Status';
 import ConfirmarEmail from './pages/ConfirmarEmail';
 import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import Termos from './pages/Termos';
 import Privacidade from './pages/Privacidade';
 import { AuthProvider } from './contexts/AuthContext';
@@ -50,6 +51,7 @@ export default function App() {
 
               {/* ============ RECUPERAÇÃO DE SENHA ============ */}
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
 
               {/* ============ PÁGINAS DE STATUS (sempre acessíveis) ============ */}
               <Route path="/status" element={<Status />} />

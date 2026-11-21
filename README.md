@@ -11,7 +11,7 @@ Aplicação web para acompanhar insumos, fornecedores, compras, vendas e estoque
 - Alertas de estoque, preferências de tema e páginas de termos e privacidade.
 - Navegação por teclado, indicadores de foco e suporte a movimento reduzido em partes da interface.
 
-A recuperação de senha ainda **não está implementada**: o link de login abre uma página informativa. Os textos de preços na página institucional são ilustrativos. A interface inclui recursos de acessibilidade, mas o projeto ainda não possui uma auditoria completa que comprove conformidade com uma norma específica.
+A recuperação de senha por e-mail depende da API e do SMTP configurados. Os textos de preços na página institucional são ilustrativos. A interface inclui recursos de acessibilidade, mas o projeto ainda não possui uma auditoria completa que comprove conformidade com uma norma específica.
 
 ## Tecnologias
 
@@ -57,7 +57,8 @@ O ESLint apresenta avisos de Fast Refresh em módulos que exportam componentes j
 | `/` | Página institucional. |
 | `/login` e `/signup` | Login e cadastro; redirecionam usuários autenticados ao painel. |
 | `/confirmar` | Confirmação de e-mail por token. |
-| `/forgot-password` | Aviso de recuperação de senha indisponível. |
+| `/forgot-password` | Solicitação de recuperação de senha por e-mail. |
+| `/reset-password` | Definição de uma nova senha com o link recebido. |
 | `/status` | Página genérica de status. |
 | `/termos` e `/privacidade` | Documentos legais. |
 | `/dashboard` | Painel protegido por autenticação. |

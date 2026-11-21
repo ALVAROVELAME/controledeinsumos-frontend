@@ -12,7 +12,7 @@ import Status from '../src/pages/Status';
 import ConfirmarEmail from '../src/pages/ConfirmarEmail';
 import { authService } from '../src/services/auth.service';
 
-vi.mock('../src/services/auth.service', () => ({ authService: { login: vi.fn(), cadastrar: vi.fn(), confirmarEmail: vi.fn() } }));
+vi.mock('../src/services/auth.service', () => ({ authService: { login: vi.fn(), cadastrar: vi.fn(), confirmarEmail: vi.fn(), solicitarRecuperacao: vi.fn(), redefinirSenha: vi.fn() } }));
 vi.mock('../src/contexts/AuthContext', () => ({ useAuth: () => ({ login: vi.fn() }) }));
 
 function pagina(element: React.ReactNode, path = '/') {
@@ -36,10 +36,14 @@ describe('páginas públicas', () => {
     expect(screen.getByRole('navigation', { name: /documentos legais/i })).toBeInTheDocument();
   });
 
-  it('informa que a recuperação de senha ainda não está disponível', () => {
+  it('permite solicitar recuperação sem revelar se a conta existe', async () => {
+    const user = userEvent.setup();
+    vi.mocked(authService.solicitarRecuperacao).mockResolvedValue({ sucesso: true, mensagem: 'ok' });
     pagina(<ForgotPassword />);
-    expect(screen.getByText(/ainda não está disponível/i)).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /voltar ao login/i })).toHaveAttribute('href', '/login');
+    await user.type(screen.getByLabelText('E-mail'), 'ana@example.com');
+    await user.click(screen.getByRole('button', { name: /enviar link/i }));
+    expect(authService.solicitarRecuperacao).toHaveBeenCalledWith('ana@example.com');
+    expect(await screen.findByText(/se este e-mail estiver cadastrado/i)).toBeInTheDocument();
   });
 
   it('apresenta a central de status', () => {

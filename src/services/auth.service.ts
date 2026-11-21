@@ -13,6 +13,12 @@ const TOKEN_KEY = 'token';
 const USER_KEY = 'usuario';
 
 export const authService = {
+  async solicitarRecuperacao(email: string): Promise<MensagemResponse> {
+    const { data } = await http.post<MensagemResponse>('/api/auth/forgot-password', { email }); return data;
+  },
+  async redefinirSenha(token: string, senha: string): Promise<MensagemResponse> {
+    const { data } = await http.post<MensagemResponse>('/api/auth/reset-password', { token, senha }); return data;
+  },
   async login(dados: LoginRequest): Promise<LoginResponse> {
     const { data } = await http.post<LoginResponse>('/api/auth/login', dados);
     if (data.token) {
