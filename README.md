@@ -1,90 +1,109 @@
 # Controle de Insumos — Frontend
 
-Aplicação web para acompanhar insumos, fornecedores, compras, vendas e estoque. O projeto inclui uma página institucional, autenticação e um painel protegido que consome uma API separada.
+Aplicação web para acompanhar insumos, fornecedores, compras, vendas e estoque. O frontend reúne uma página institucional, autenticação e um painel protegido que consome uma API separada.
 
 ## Funcionalidades
 
-- Cadastro e login, confirmação de e-mail e exclusão de conta.
-- Painel com visão geral, indicadores e gráficos de compras, vendas e lucro.
-- Cadastro, edição, consulta e exclusão de insumos e fornecedores.
-- Registro e consulta de movimentações, com filtros e exportação CSV.
-- Alertas de estoque, preferências de tema e páginas de termos e privacidade.
-- Navegação por teclado, indicadores de foco e suporte a movimento reduzido em partes da interface.
+- Cadastro, login, confirmação de e-mail e recuperação de senha por e-mail.
+- Painel com indicadores, gráficos de compras, vendas, lucro e margem, além de alertas de reposição.
+- Cadastro, consulta, edição e exclusão de insumos e fornecedores.
+- Registro, edição, consulta e exclusão de movimentações de compra, venda e ajuste.
+- Filtros e ordenação de dados; exportação de movimentações em CSV e download de backup em JSON.
+- Tema claro ou escuro, navegação por teclado, paleta de comandos e páginas de termos e privacidade.
+- Carregamento das páginas sob demanda e pré-carregamento em segundo plano quando as condições de conexão permitem.
 
-A recuperação de senha por e-mail depende da API e do SMTP configurados. Os textos de preços na página institucional são ilustrativos. A interface inclui recursos de acessibilidade, mas o projeto ainda não possui uma auditoria completa que comprove conformidade com uma norma específica.
+A recuperação por e-mail depende da API e do serviço de envio de mensagens configurados. A interface de exclusão de conta ainda informa que a operação não está implementada, embora exista um método correspondente no serviço de autenticação. Os preços apresentados na página institucional são ilustrativos. Há recursos de acessibilidade, mas não há uma auditoria completa que comprove conformidade com uma norma específica.
 
 ## Tecnologias
 
 - React 19, TypeScript, Vite e React Router.
 - Axios para comunicação HTTP.
-- Tailwind CSS integrado ao Vite, em conjunto com CSS global e estilos existentes nos componentes. A migração para Tailwind ainda não está concluída.
-- ESLint, Vitest, React Testing Library e jsdom para qualidade e testes.
+- Tailwind CSS integrado ao Vite, combinado com CSS global e estilos de componentes. A migração para Tailwind é parcial.
+- ESLint, Vitest, React Testing Library e jsdom.
 
 ## Executar localmente
 
-Use Node.js 22.12 ou superior em uma versão suportada pelo Vitest (22, 24 ou 26+) e npm. Na raiz do projeto:
+Use Node.js 22.12 ou superior em uma versão compatível com as dependências e npm. Instale os pacotes na raiz do projeto:
 
 ```sh
 npm install
 ```
 
-Crie um arquivo `.env` a partir de `.env.example` e configure `VITE_API_URL` com o endereço da sua API. O valor é obrigatório. Variáveis `VITE_` são incorporadas ao frontend e ficam visíveis no navegador: não coloque senhas, tokens ou outras credenciais nelas. Não publique o arquivo `.env`.
+Configure o endereço da API para o ambiente de desenvolvimento usando o arquivo de exemplo de configuração fornecido no projeto. A API precisa estar acessível e aceitar requisições da origem do frontend. Não inclua credenciais ou valores privados em arquivos publicados.
 
 ```sh
 npm run dev
 ```
 
-O Vite exibirá no terminal o endereço local disponível. A API precisa estar acessível e configurada para aceitar requisições da origem do frontend.
+O Vite exibirá o endereço local disponível no terminal.
 
 ## Comandos
 
 | Comando | Finalidade |
 | --- | --- |
 | `npm run dev` | Inicia o servidor de desenvolvimento. |
-| `npm run build` | Verifica TypeScript e gera o build em `dist/`. |
+| `npm run build` | Verifica o TypeScript e gera o build em `dist/`. |
 | `npm run preview` | Visualiza localmente o build gerado. |
 | `npm run lint` | Executa o ESLint. |
 | `npm test` | Executa os testes uma vez. |
 | `npm run test:watch` | Executa os testes em modo contínuo. |
-| `npm run test:coverage` | Gera o relatório de cobertura em `coverage/`. |
-
-O ESLint apresenta avisos de Fast Refresh em módulos que exportam componentes junto com hooks ou utilitários. Esses avisos apontam possíveis limitações na atualização de módulos durante o desenvolvimento.
+| `npm run test:coverage` | Gera relatório de cobertura em `coverage/`. |
 
 ## Rotas
 
 | Rota | Página |
 | --- | --- |
 | `/` | Página institucional. |
-| `/login` e `/signup` | Login e cadastro; redirecionam usuários autenticados ao painel. |
+| `/login` e `/signup` | Login e cadastro. |
 | `/confirmar` | Confirmação de e-mail por token. |
-| `/forgot-password` | Solicitação de recuperação de senha por e-mail. |
-| `/reset-password` | Definição de uma nova senha com o link recebido. |
+| `/forgot-password` | Solicitação de recuperação de senha. |
+| `/reset-password` | Definição de nova senha a partir do link recebido. |
 | `/status` | Página genérica de status. |
 | `/termos` e `/privacidade` | Documentos legais. |
 | `/dashboard` | Painel protegido por autenticação. |
 
-## Organização
+Páginas públicas de login e cadastro redirecionam usuários autenticados ao painel. Na inicialização, a aplicação valida a sessão existente; visitantes são direcionados ao login ao tentar acessar a rota protegida.
+
+## Organização do projeto
 
 ```text
-public/                 Logo e arquivos públicos
-src/components/         Componentes compartilhados e proteção de rotas
-src/contexts/           Autenticação, insumos e notificações
-src/pages/              Páginas públicas e painel
-src/pages/Dashboard/    Componentes, estilos e funções do painel
-src/services/           Cliente HTTP e serviços de API
-src/types/              Tipos da API e do domínio
-src/mappers/            Conversão de dados de tarefas legadas
-tests/                  Testes automatizados
+public/                     Logo e imagens públicas
+src/
+  components/               Componentes compartilhados
+    auth/                   Ícone de senha, saída e proteção de rotas
+  contexts/                 Estado de autenticação, insumos, notificações e tarefas
+  mappers/                  Conversão e validação de dados de tarefas
+  pages/
+    auth/                   Login, cadastro, confirmação e recuperação de senha
+    Dashboard/              Painel, navegação, abas, formulários e estilos
+    legal/                  Termos e política de privacidade
+    Landing.tsx             Página institucional
+    Status.tsx              Tela genérica de status
+  services/
+    estoque/                Serviços de insumos, fornecedores e movimentações
+    produtividade/          Serviços de tarefas e Pomodoro
+    auth.service.ts         Operações de autenticação
+    http.ts                 Cliente HTTP e tratamento de erros
+  types/                    Tipos do domínio e contratos da API
+  App.tsx                   Rotas, provedores e carregamento das páginas
+  index.css                 Estilos globais e estilos compartilhados
+  main.tsx                  Inicialização da aplicação
+tests/
+  autenticacao/             Sessão, rotas e recuperação de senha
+  paginas/                  Páginas públicas e metadados
+  painel/                   Navegação e formulários do Dashboard
+  unidade/                  Testes de regras isoladas
+  setup.ts                  Configuração compartilhada dos testes
 ```
 
-Há arquivos de tarefas e Pomodoro no repositório que pertencem a funcionalidades anteriores; eles não são as abas do painel atual.
+O repositório também contém componentes, serviços e tipos de tarefas e Pomodoro. Nesta estrutura, eles não estão conectados às rotas ou às abas do painel de insumos.
 
-## Autenticação e API
+## Integração com a API
 
-O cliente HTTP usa `VITE_API_URL` como endereço base e acrescenta o token armazenado no navegador às requisições. A sessão é validada ao iniciar; rotas protegidas redirecionam visitantes para o login. Os serviços ativos usam endpoints de autenticação, usuários, insumos, fornecedores e movimentações. A disponibilidade das operações depende da API configurada.
+O cliente HTTP centraliza as requisições e o tratamento de erros. O token da sessão é mantido no navegador e enviado às requisições autenticadas. As operações do painel dependem dos serviços de insumos, fornecedores e movimentações; a autenticação também utiliza os serviços de usuários e recuperação de senha da API configurada.
 
 ## Testes e publicação
 
-A suíte usa respostas simuladas e não testa a API de produção. Ela cobre fluxos selecionados de autenticação, páginas públicas e navegação do painel, mas não substitui testes completos em navegador real ou de integração com uma API de teste. Veja [TESTES.md](./TESTES.md) para os cenários cobertos e pendentes.
+A suíte cobre fluxos selecionados de autenticação, páginas públicas, recuperação de senha, navegação e formulários do painel, além de conversão de dados. Ela usa respostas simuladas e não substitui testes em navegador real ou testes integrados com uma API de teste. Consulte [TESTES.md](./TESTES.md) para detalhes.
 
-O `vercel.json` fornece o fallback para rotas da aplicação. Em outras hospedagens, configure o servidor para encaminhar rotas do React Router ao `index.html` e informe a variável de ambiente de build.
+O arquivo `vercel.json` configura o encaminhamento de rotas para a aplicação. Em outras hospedagens, configure o servidor para servir `index.html` nas rotas do React Router e forneça a configuração pública necessária ao build.
