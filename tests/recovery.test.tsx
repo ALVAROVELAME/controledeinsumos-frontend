@@ -9,6 +9,15 @@ beforeEach(() => vi.clearAllMocks());
 function pagina(path: string) { return render(<MemoryRouter initialEntries={[path]}><ResetPassword /></MemoryRouter>); }
 describe('redefinição de senha', () => {
  it('avisa quando o link está incompleto', () => { pagina('/reset-password'); expect(screen.getByRole('alert')).toHaveTextContent(/link incompleto/i); });
+ it('mostra e oculta as duas senhas pelos ícones', async () => {
+  const user = userEvent.setup(); pagina('/reset-password?token=abc');
+  const senha = screen.getByLabelText('Nova senha'); const confirmacao = screen.getByLabelText('Confirmar senha');
+  expect(senha).toHaveAttribute('type', 'password'); expect(confirmacao).toHaveAttribute('type', 'password');
+  await user.click(screen.getAllByRole('button', { name: 'Mostrar senhas' })[0]);
+  expect(senha).toHaveAttribute('type', 'text'); expect(confirmacao).toHaveAttribute('type', 'text');
+  await user.click(screen.getAllByRole('button', { name: 'Ocultar senhas' })[1]);
+  expect(senha).toHaveAttribute('type', 'password'); expect(confirmacao).toHaveAttribute('type', 'password');
+ });
  it('valida confirmação e redefine a senha', async () => {
   const user = userEvent.setup(); vi.mocked(authService.redefinirSenha).mockResolvedValue({ sucesso: true, mensagem: 'ok' }); pagina('/reset-password?token=abc');
   await user.type(screen.getByLabelText('Nova senha'), 'Senha123!');
