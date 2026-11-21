@@ -243,19 +243,32 @@ const STYLES = `
 
 @media (max-width: 960px) {
   .ag-hero { padding: 116px 0 80px; }
-  .ag-hero-inner { grid-template-columns: 1fr; gap: 64px; }
+  .ag-hero-inner { grid-template-columns: minmax(0, 1fr); gap: 64px; }
+  .ag-scene-wrap { width: min(100%, 520px); justify-self: center; }
   .ag-hero-text { max-width: 640px; }
   .ag-scene { transform: none; }
 }
 @media (max-width: 640px) {
-  .ag-layer.l1 { right: 6px; top: -30px; }
-  .ag-layer.l2 { display: none; }
-  .ag-layer.l3 { right: 12px; }
+  .ag-scene-wrap { width: min(calc(100% - 24px), 400px); }
+  .ag-scene { transform: rotateX(calc(var(--rx, 0deg) + 5deg)) rotateY(calc(var(--ry, 0deg) - 6deg)) scale(.90); touch-action: pan-y; }
+  .ag-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+  .ag-kpi { padding: 10px 6px; }
+  .ag-kpi-value { font-size: clamp(10px, 3.2vw, 14px); letter-spacing: -.03em; }
+  /* Mantém as três camadas dentro do painel em telas pequenas. */
+  .ag-layer { transform: translate3d(calc(var(--px, 0) * var(--dx, 8) * 1px), calc(var(--py, 0) * var(--dy, 6) * 1px), var(--z, 30px)); }
+  .ag-layer.l1 { top: 12px; right: 12px; --z: 60px; --dx: 8; --dy: 6; }
+  .ag-layer.l2 { display: block; left: 12px; bottom: 12px; --z: 90px; --dx: -7; --dy: -5; }
+  .ag-layer.l3 { right: 12px; bottom: 12px; --z: 66px; --dx: 8; --dy: 6; }
+  .ag-chip { gap: 6px; padding: 6px 8px; border-radius: 10px; font-size: 10px; animation: agFloatMobile 6s ease-in-out infinite; }
+  .ag-chip small { font-size: 9px; }
+  .ag-chip-ic { width: 25px; height: 25px; border-radius: 7px; }
+  .ag-layer.l3 img { width: 38px; height: 38px; border-radius: 11px; animation: agFloatMobile 7s ease-in-out infinite -1s; }
+  .ag-panel-body { padding-bottom: 62px; }
 }
+@keyframes agFloatMobile { 0%, 100% { translate: 0 0; } 50% { translate: 0 -4px; } }
 @media (max-width: 480px) {
-  .ag-panel-body { padding: 14px; }
+  .ag-panel-body { padding: 14px 14px 62px; }
   .ag-bar-row { grid-template-columns: 62px 1fr 46px; gap: 8px; }
-  .ag-kpi-value { font-size: 14px; }
   .ag-hero-actions { flex-direction: column; align-items: stretch; }
   .ag-cta { justify-content: center; }
 }
@@ -451,7 +464,7 @@ function Tilt({
     if (!el) return;
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!fine || reduce) return;
+    if (reduce) return;
 
     let raf = 0;
     const apply = (x: number, y: number) => {
@@ -466,11 +479,13 @@ function Tilt({
       });
     };
     const onMove = (e: PointerEvent) => {
-      if (global) {
+      if (global && fine) {
         apply(e.clientX / window.innerWidth, e.clientY / window.innerHeight);
       } else {
         const r = el.getBoundingClientRect();
-        apply((e.clientX - r.left) / r.width, (e.clientY - r.top) / r.height);
+        const x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+        const y = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+        apply(x, y);
       }
     };
     const reset = () => {
@@ -480,13 +495,21 @@ function Tilt({
       ['--mx', '--my'].forEach((p) => el.style.setProperty(p, '50%'));
     };
 
-    const target: Window | HTMLElement = global ? window : el;
+    const target: Window | HTMLElement = global && fine ? window : el;
     target.addEventListener('pointermove', onMove as EventListener);
-    if (!global) el.addEventListener('pointerleave', reset);
+    if (!fine) el.addEventListener('pointerdown', onMove);
+    if (target === el) {
+      el.addEventListener('pointerleave', reset);
+      el.addEventListener('pointerup', reset);
+      el.addEventListener('pointercancel', reset);
+    }
     return () => {
       cancelAnimationFrame(raf);
       target.removeEventListener('pointermove', onMove as EventListener);
-      if (!global) el.removeEventListener('pointerleave', reset);
+      el.removeEventListener('pointerdown', onMove);
+      el.removeEventListener('pointerleave', reset);
+      el.removeEventListener('pointerup', reset);
+      el.removeEventListener('pointercancel', reset);
     };
   }, [max, global]);
 
