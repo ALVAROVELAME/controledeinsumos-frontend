@@ -963,7 +963,7 @@ export default function Landing() {
                 {[
                   { tag: 'Comércio', titulo: 'Lojas e varejo', itens: ['Descubra produtos com margem negativa', 'Ajuste preços com base em dados', 'Acabe com a planilha de estoque'] },
                   { tag: 'Compras', titulo: 'Distribuidoras', itens: ['Alerta antes do item crítico acabar', 'Total comprado por fornecedor', 'Compras vs vendas no tempo'] },
-                  { tag: 'Obras', titulo: 'Construção e serviços', itens: ['Controle cimento, tinta, areia e mais', 'Entradas e saídas por data', 'Exporte as movimentações em CSV'] },
+                  { tag: 'Obras', titulo: 'Construção e serviços', itens: ['Controle cimento, tinta, areia e mais', 'Entradas e saídas por data', 'Exporte as movimentações em Excel'] },
                 ].map((c, i) => (
                   <Reveal key={c.titulo} delay={i * 60}>
                     <Tilt className="ag-card" max={7}>
@@ -992,7 +992,7 @@ export default function Landing() {
 
               <div className="ag-pricing">
                 {[
-                  { nome: 'Grátis', preco: 'R$ 0', periodo: '/ sempre', desc: 'Ideal para quem está começando', features: ['Até 50 insumos', 'Até 200 movimentações/mês', 'Dashboard com KPIs', 'Exportar CSV', 'Suporte por e-mail'], cta: 'Começar grátis', destaque: false },
+                  { nome: 'Grátis', preco: 'R$ 0', periodo: '/ sempre', desc: 'Ideal para quem está começando', features: ['Até 50 insumos', 'Até 200 movimentações/mês', 'Dashboard com KPIs', 'Exportar Excel', 'Suporte por e-mail'], cta: 'Começar grátis', destaque: false },
                   { nome: 'Pro', preco: 'R$ 29', periodo: '/ mês', desc: 'Para quem quer controle total', features: ['Insumos ilimitados', 'Movimentações ilimitadas', 'Gráficos avançados', 'Alertas de estoque', 'Gestão de fornecedores', 'Suporte prioritário'], cta: 'Assinar Pro', destaque: true },
                   { nome: 'Empresa', preco: 'R$ 99', periodo: '/ mês', desc: 'Multi-usuários e integrações', features: ['Tudo do Pro', 'Multi-usuários', 'API de integração', 'Relatórios personalizados', 'Gerente de conta'], cta: 'Falar com vendas', destaque: false },
                 ].map((p, i) => (
@@ -1035,7 +1035,7 @@ export default function Landing() {
                   { q: 'Como funciona o cálculo de lucro e margem?', a: 'O lucro por unidade é o preço de venda menos o preço de compra. A margem é o lucro dividido pelo preço de venda. Tudo calculado automaticamente.' },
                   { q: 'O estoque é atualizado sozinho?', a: 'Sim. Cada compra soma, cada venda subtrai e ajustes aplicam a correção de inventário. Você não precisa mexer no estoque manualmente.' },
                   { q: 'Posso cadastrar meus fornecedores?', a: 'Sim. Você cadastra nome, documento, telefone e e-mail. No histórico de compras, cada fornecedor aparece com o total comprado.' },
-                  { q: 'Meus dados ficam seguros?', a: 'Seus dados ficam salvos na nuvem e você pode exportar um CSV das movimentações a qualquer momento.' },
+                  { q: 'Meus dados ficam seguros?', a: 'Seus dados ficam salvos na nuvem e você pode exportar uma planilha Excel das movimentações a qualquer momento.' },
                   { q: 'Existe uma API?', a: 'Sim. A API do projeto é documentada e pode ser explorada ao vivo pela página de documentação interativa, linkada na seção “Conheça o projeto”.' },
                 ].map((item, i) => (
                   <FaqItem key={item.q} index={i} pergunta={item.q} resposta={item.a} />

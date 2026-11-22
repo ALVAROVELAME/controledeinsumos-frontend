@@ -19,6 +19,7 @@ import { useToast } from '../../contexts/ToastContext';
 import { useInsumos } from '../../contexts/InsumosContext';
 
 import { STYLES } from './styles';
+import { gerarPlanilha } from './exportacao';
 import {
   ABAS,
   ABA_KEY,
@@ -38,7 +39,6 @@ import {
   proximaOrdem,
   normalizar,
   baixarArquivo,
-  celulaCSV,
   hoje,
   Paleta,
   Modal,
@@ -348,26 +348,20 @@ function DashboardConteudo() {
 
   /* ---------- Exportar / Backup ---------- */
 
-  const exportarCSV = (todas = false) => {
-    const lista = todas
-      ? [...movimentacoes].sort((a, b) => dataLocal(b.data).getTime() - dataLocal(a.data).getTime())
-      : movsFiltradas;
-    const linhas: (string | number)[][] = [
-      ['Data', 'Insumo', 'Tipo', 'Quantidade', 'Preço Unit.', 'Total', 'Fornecedor/Cliente', 'Observações'],
-      ...lista.map((m) => [
-        new Date(m.data).toLocaleDateString('pt-BR'),
-        nomeInsumo(m.insumoId),
-        m.tipo,
-        m.quantidade,
-        m.precoUnitario,
-        m.total,
-        m.fornecedorId ? nomeFornecedor(m.fornecedorId) : (m.cliente ?? ''),
-        m.observacoes ?? '',
-      ]),
-    ];
-    const csv = linhas.map((l) => l.map(celulaCSV).join(';')).join('\n');
-    baixarArquivo(`movimentacoes-${hoje()}.csv`, '\uFEFF' + csv, 'text/csv;charset=utf-8');
-    push(`CSV exportado (${lista.length} registro${lista.length === 1 ? '' : 's'})`, 'sucesso');
+  const exportarExcel = async (todas = false) => {
+    const lista = todas ? [...movimentacoes].sort((a, b) => dataLocal(b.data).getTime() - dataLocal(a.data).getTime()) : movsFiltradas;
+    try {
+      const buffer = await gerarPlanilha(lista, insumos, fornecedores, todas ? 'Todas as movimentações' : 'Movimentações conforme filtros aplicados');
+      const url = URL.createObjectURL(new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `movimentacoes-${hoje()}.xlsx`;
+      link.click();
+      URL.revokeObjectURL(url);
+      push(`Planilha exportada (${lista.length} registros)`, 'sucesso');
+    } catch {
+      push('Não foi possível gerar a planilha Excel.', 'erro');
+    }
   };
 
   const baixarBackup = () => {
@@ -498,7 +492,7 @@ function DashboardConteudo() {
       ? [{ id: 'urgentes', rotulo: `Ver ${alertas} insumo${alertas === 1 ? '' : 's'} para repor`, grupo: 'Estoque', acao: verInsumosUrgentes }]
       : []),
     { id: 'tema', rotulo: tema === 'claro' ? 'Ativar modo escuro' : 'Ativar modo claro', grupo: 'Preferências', acao: alternar },
-    { id: 'csv', rotulo: 'Exportar movimentações (CSV)', grupo: 'Dados', acao: () => exportarCSV(true) },
+    { id: 'excel', rotulo: 'Exportar movimentações (Excel)', grupo: 'Dados', acao: () => void exportarExcel(true) },
     { id: 'backup', rotulo: 'Baixar backup (JSON)', grupo: 'Dados', acao: baixarBackup },
     ...(estado !== 'pronto'
       ? [{ id: 'recarregar', rotulo: 'Recarregar dados da API', grupo: 'Sincronização', acao: recarregar }]
@@ -666,7 +660,7 @@ function DashboardConteudo() {
                 onNova={() => abrirNovaMov()}
                 onEditar={abrirEditarMov}
                 onExcluir={(m) => setConfirmar({ tipo: 'mov', alvo: m })}
-                onExportarCSV={() => exportarCSV(false)}
+                onExportarExcel={() => void exportarExcel(false)}
               />
             )}
 
@@ -686,7 +680,7 @@ function DashboardConteudo() {
                 usuario={usuario}
                 estado={estado}
                 onRecarregar={recarregar}
-                onExportarCSV={() => exportarCSV(true)}
+                onExportarExcel={() => void exportarExcel(true)}
                 onBaixarBackup={baixarBackup}
                 onLimparTudo={() => setConfirmar({ tipo: 'limpar' })}
                 onExcluirConta={() => {

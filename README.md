@@ -8,7 +8,7 @@ Aplicação web para acompanhar insumos, fornecedores, compras, vendas e estoque
 - Painel com indicadores, gráficos de compras, vendas, lucro e margem, além de alertas de reposição.
 - Cadastro, consulta, edição e exclusão de insumos e fornecedores.
 - Registro, edição, consulta e exclusão de movimentações de compra, venda e ajuste.
-- Filtros e ordenação de dados; exportação de movimentações em CSV e download de backup em JSON.
+- Filtros e ordenação de dados; exportação de movimentações em Excel e download de backup em JSON.
 - Tema claro ou escuro, navegação por teclado, paleta de comandos e páginas de termos e privacidade.
 - Carregamento das páginas sob demanda e pré-carregamento em segundo plano quando as condições de conexão permitem.
 

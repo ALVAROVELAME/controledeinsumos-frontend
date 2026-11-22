@@ -173,17 +173,6 @@ export const proximaOrdem = <C extends string>(atual: Ordem<C>, campo: C): Ordem
   dir: atual.campo === campo && atual.dir === 'asc' ? 'desc' : 'asc',
 });
 
-export const celulaCSV = (v: string | number) => {
-  let s: string;
-  if (typeof v === 'number') {
-    s = String(v).replace('.', ',');
-  } else {
-    s = v;
-    if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
-  }
-  return `"${s.replace(/"/g, '""')}"`;
-};
-
 export const baixarArquivo = (nome: string, conteudo: string, tipo: string) => {
   const blob = new Blob([conteudo], { type: tipo });
   const url = URL.createObjectURL(blob);

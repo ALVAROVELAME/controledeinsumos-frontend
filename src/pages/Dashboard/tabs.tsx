@@ -427,7 +427,7 @@ export function AbaMovimentacoes({
   onNova,
   onEditar,
   onExcluir,
-  onExportarCSV,
+  onExportarExcel,
 }: {
   insumos: Insumo[];
   movimentacoes: Movimentacao[];
@@ -448,7 +448,7 @@ export function AbaMovimentacoes({
   onNova: () => void;
   onEditar: (m: Movimentacao) => void;
   onExcluir: (m: Movimentacao) => void;
-  onExportarCSV: () => void;
+  onExportarExcel: () => void;
 }) {
   return (
     <>
@@ -488,9 +488,7 @@ export function AbaMovimentacoes({
           )}
 
           <div className="dash-filters-spacer">
-            <button type="button" className="dash-btn dash-btn-ghost" onClick={onExportarCSV} disabled={movsFiltradas.length === 0}>
-              ⬇️ Exportar CSV
-            </button>
+            <button type="button" className="dash-btn dash-btn-ghost" onClick={onExportarExcel} disabled={movsFiltradas.length === 0}>⬇️ Exportar Excel</button>
             <button
               type="button"
               className="dash-btn dash-btn-primary"
@@ -678,7 +676,7 @@ export function AbaConfig({
   usuario,
   estado,
   onRecarregar,
-  onExportarCSV,
+  onExportarExcel,
   onBaixarBackup,
   onLimparTudo,
   onExcluirConta,
@@ -689,7 +687,7 @@ export function AbaConfig({
   usuario: { email?: string } | null;
   estado: EstadoApi;
   onRecarregar: () => void;
-  onExportarCSV: () => void;
+  onExportarExcel: () => void;
   onBaixarBackup: () => void;
   onLimparTudo: () => void;
   onExcluirConta: () => void;
@@ -752,12 +750,10 @@ export function AbaConfig({
         </div>
         <div className="dash-config-row">
           <div>
-            <div className="dash-config-label text-[14px] font-semibold">Exportar CSV</div>
-            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">Todas as movimentações, prontas para abrir no Excel</div>
+            <div className="dash-config-label text-[14px] font-semibold">Exportar Excel</div>
+            <div className="dash-config-desc mt-[2px]! max-w-[520px] text-[12.5px] text-[color:var(--muted)]">Todas as movimentações em uma planilha Excel formatada</div>
           </div>
-          <button type="button" className="dash-btn dash-btn-ghost" onClick={onExportarCSV} disabled={!temMovimentacoes}>
-            ⬇️ Exportar
-          </button>
+          <button type="button" className="dash-btn dash-btn-ghost" onClick={onExportarExcel} disabled={!temMovimentacoes}>⬇️ Excel</button>
         </div>
         <div className="dash-config-row">
           <div>

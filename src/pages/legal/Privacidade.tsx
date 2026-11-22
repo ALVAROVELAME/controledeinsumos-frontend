@@ -197,7 +197,7 @@ const SECOES: SecaoLegal[] = [
           <li>Acessar seus dados a qualquer momento.</li>
           <li>Corrigir dados incompletos, inexatos ou desatualizados.</li>
           <li>Solicitar anonimização, bloqueio ou eliminação.</li>
-          <li>Portar seus dados para outro fornecedor (exportação em CSV das movimentações).</li>
+          <li>Portar seus dados para outro fornecedor (exportação em Excel das movimentações).</li>
           <li>Revogar consentimento e solicitar exclusão da conta.</li>
           <li>Obter informações sobre compartilhamentos realizados.</li>
         </ul>

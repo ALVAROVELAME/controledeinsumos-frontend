@@ -704,7 +704,7 @@ export default function Signup() {
                   '100% grátis, sem cartão de crédito',
                   'Cálculo automático de lucro e margem',
                   'Dados salvos automaticamente na nuvem',
-                  'Exporte suas movimentações em CSV quando quiser',
+                  'Exporte suas movimentações em Excel quando quiser',
                 ].map((item) => (
                   <li key={item} className="sg-brand-item">
                     <span className="sg-brand-check" aria-hidden="true">✓</span>
